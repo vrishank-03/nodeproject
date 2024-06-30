@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Todo List</h1>
+      <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+    </div>
+    <img src="/logo.png" alt="Logo" class="logo">
+    <form action="/add" method="POST">
+      <input type="text" name="todoItem" id="todoInput" placeholder="Add a new item...">
+      <button type="submit">Add Item</button>
+    </form>
+    <ul id="todoList">
+      <% todoItems.forEach(function(item, index) { %>
+        <li>
+          <%= item %> 
+          <span class="dustbin-icon" onclick="removeItem(event, <%= index %>)">🗑️</span>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+
+  <script src="/scripts.js"></script>
+  <script>
+    function removeItem(event, index) {
+      event.stopPropagation(); // Prevent the click event from bubbling up to the li element
+      fetch('/remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ index: index })// send the index of the item to remove to the server
+        window.location.reload();//reload page after item has been removed
+      });
+    }
+  </script>
+</body>
+</html>
